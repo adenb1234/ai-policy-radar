@@ -37,4 +37,4 @@ enrich:
 	PYTHONPATH=backend uv run python -m radar.scripts.enrich $(ARGS)
 
 eval:
-	uv run python evals/run.py
+	PYTHONPATH=backend uv run python -m evals.run $(ARGS)

@@ -1,0 +1,267 @@
+# AI Policy Radar — eval cases (BUILD_PLAN §12.1)
+#
+# DRAFT. Each case carries a profile (NL + structured_overrides) but no
+# ground-truth `expected_*` fields. The system CANNOT grade itself against
+# AI-written ground truth (§12.1 hard rule).
+#
+# Aden's fill-in workflow (see BUILD_LOG.md):
+#   1. `make eval` runs every case and writes evals/runs/<ts>/<case_id>.json
+#      with the actual dashboard output.
+#   2. Eyeball each dashboard. Paste real activity_ids you'd want surfaced
+#      into `expected_top_activities`. Paste topic_ids you'd expect to see
+#      into `expected_topics_surfaced`. Paste 3–5 short action substrings
+#      ("file comment on", "brief leadership on", "monitor docket") into
+#      `expected_action_themes`.
+#   3. Re-run `make eval` — judge now has ground truth and produces a
+#      real recall/reasoning/extras score per case.
+#
+# Schema (per case):
+#   id: <slug>
+#   profile:
+#     nl: "<free-form description, written as the user>"
+#     structured_overrides:  # form-style overrides applied AFTER LLM extraction
+#       jurisdictions: [...]
+#       recency_days: 7|30|90|180
+#       risk_tolerance: actionable_only|informational
+#       entity_types: [...]            # optional
+#       activity_type_filters: [...]   # optional
+#   expected_top_activities: []   # ADEN: fill in
+#   expected_topics_surfaced: []  # ADEN: fill in
+#   expected_action_themes: []    # ADEN: fill in
+
+- id: case_frontier_lab_policy
+  profile:
+    nl: |
+      I run policy at a frontier AI lab building general-purpose foundation
+      models. My day-to-day is owning our positions on US export controls
+      (BIS chip rules, AI diffusion framework, license exceptions for
+      training compute), federal compute thresholds and reporting
+      requirements (the 10^26 FLOPs line, NIST/AISI evals mandates),
+      preemption fights between SB 1047-style state bills and any federal
+      framework, and the EU AI Act GPAI obligations + Code of Practice
+      implementing acts. I also care about how the open-weights debate
+      shakes out — release policy, dual-use research norms, and any
+      enforcement against open-weights distributors. Bring me anything
+      that materially shifts our compliance burden, our model release
+      decisions, or our compute roadmap.
+    structured_overrides:
+      jurisdictions: [US-Federal, EU]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  # AI cannot grade itself against AI-written ground truth — Aden fills these:
+  expected_top_activities: []  # ADEN: paste activity_ids that should appear in top-15 after running once
+  expected_topics_surfaced: []  # ADEN: paste topic_ids you'd expect to see chips for
+  expected_action_themes: []  # ADEN: paste 3-5 action substrings you'd expect (e.g. "file comment on", "brief leadership on")
+
+- id: case_state_ag_ca
+  profile:
+    nl: |
+      I lead the AI/algorithmic accountability practice inside the
+      California Attorney General's office. We enforce California's
+      consumer protection statutes against AI-driven harms — deepfake
+      fraud, election deepfakes, AI-generated CSAM, biased algorithmic
+      decisions in hiring/lending/housing, and false advertising claims
+      about AI capabilities. We're also on the front lines of the
+      preemption fight: when Congress or the executive branch tries to
+      preempt state AI laws (SB 1047 successors, ADMT regs, AB 2013
+      training-data transparency), our office files comments and amicus
+      briefs. I track FTC and DOJ Antitrust enforcement on AI for
+      coordination opportunities and watch other state AGs (NY, TX) for
+      multistate actions.
+    structured_overrides:
+      jurisdictions: [US-CA, US-Federal]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in after first run
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_healthcare_ai_startup
+  profile:
+    nl: |
+      I'm regulatory counsel at a Series B healthcare AI startup. We
+      build clinical decision support software (FDA SaMD pathway) and
+      ambient documentation tools used at the point of care. I track FDA
+      AI/ML guidance — predetermined change control plans, Good Machine
+      Learning Practice, the SaMD action plan, the AI/ML-enabled medical
+      device list. ONC's HTI-1 transparency rule for predictive DSI is a
+      core compliance lift. CMS Medicare AI coverage decisions hit our
+      reimbursement story. HIPAA and OCR enforcement on AI training
+      data, and any state law (CA, CO) that touches health AI bias
+      audits, are also on my radar. Bring me anything that changes our
+      510(k) submission strategy, our HTI-1 disclosures, or coverage.
+    structured_overrides:
+      jurisdictions: [US-Federal]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_datacenter_investor
+  profile:
+    nl: |
+      I'm a partner at an infrastructure fund deploying capital into
+      datacenter and energy buildout for AI training and inference.
+      Investments cover hyperscaler-aligned campus deals, behind-the-
+      meter generation, transmission upgrades, and grid interconnection
+      queues. I track FERC orders on transmission permitting, NEPA
+      reform, state PUC siting decisions, ERCOT/PJM/MISO interconnection
+      reform, and any federal datacenter-permitting fast-track. CHIPS
+      Act fab subsidy awards and Section 48D ITC guidance shape my
+      semiconductor-adjacent thesis. I also watch DOE loan programs,
+      EPA stationary-source rules that hit gas peakers, and Treasury
+      energy-credit transferability guidance. Surface deals, rules, and
+      orders that move the needle on power availability, transmission
+      build-time, or capital efficiency for AI compute.
+    structured_overrides:
+      jurisdictions: [US-Federal, US-TX]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_civil_society_safety
+  profile:
+    nl: |
+      I direct policy at an AI-safety-focused nonprofit. We push for
+      mandatory dangerous-capability evaluations (CBRN uplift,
+      cyberoffense, autonomous replication), pre-deployment red-teaming
+      requirements, and a UK/US AISI-style mandate for frontier model
+      pre-release access. I track every federal action that creates,
+      strengthens, or weakens the safety-evals regime: EOs, NIST/AISI
+      guidance, FTC/Commerce reporting requirements, congressional
+      hearings, and any preemption language that could blunt state
+      frontier safety acts. International coordination matters: UK AISI,
+      EU AI Act GPAI safety obligations, the AI Safety Summit
+      commitments, OECD work. Brief me on movement that meaningfully
+      raises or lowers the bar on pre-deployment safety.
+    structured_overrides:
+      jurisdictions: [US-Federal, UK, EU]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_corporate_compliance_lead
+  profile:
+    nl: |
+      I'm the AI compliance lead at a Fortune 500 enterprise software
+      vendor. We sell into regulated industries (financial services,
+      healthcare, government) and ship AI features across the product
+      line. My priorities: EU AI Act high-risk system obligations
+      (Article 6 classification, Annex III, Article 13 transparency,
+      Article 50 deepfake disclosures), conformity assessment + CE
+      marking, GPAI downstream-deployer obligations, US federal AI
+      procurement (OMB M-24-10, M-24-18, FedRAMP AI), state ADMT and
+      bias-audit requirements (NYC AEDT, Colorado AI Act, CA CPPA
+      ADMT), and SOC 2/ISO 42001-flavored audit obligations. I need to
+      know about every binding rule, transparency requirement, and
+      audit obligation that lands in the next 90 days.
+    structured_overrides:
+      jurisdictions: [US-Federal, US-CA, US-NY, EU]
+      recency_days: 90
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_national_security_analyst
+  profile:
+    nl: |
+      I'm a senior AI analyst supporting defense and IC customers.
+      Sectoral focus is national security applications — autonomy,
+      ISR/PED, counter-AI, cyber. I track DoD CDAO and Replicator
+      developments, AUKUS Pillar 2 AI, and the JADC2 AI integration
+      story. On the supply side: BIS chip controls (FDPR, EAR Section
+      744, AI diffusion framework, China-bound advanced compute
+      restrictions), CHIPS Act fab subsidy execution, and TSMC/Samsung/
+      Intel Arizona/Ohio/Texas timelines. China AI governance —
+      generative AI interim measures, MIIT model registration, deep
+      synthesis rules — feeds the threat picture. I also watch
+      sanctions tightening (Entity List adds), CFIUS AI-investment
+      reviews, and Hill activity on competition with the PRC. Surface
+      anything that affects the technology balance or our access to
+      key chips, talent, or models.
+    structured_overrides:
+      jurisdictions: [US-Federal, CN]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_civil_liberties_advocate
+  profile:
+    nl: |
+      I'm staff counsel at a digital civil liberties organization. My
+      docket: privacy harms from AI training data (web scraping,
+      Section 230 + scraping suits, FTC Section 5 enforcement on
+      training-data practices), content provenance and authenticity
+      (C2PA mandates, deepfake disclosure laws), automated decision-
+      making in housing/employment/credit (CFPB, HUD, EEOC AI
+      guidance, NYC AEDT, Colorado AI Act, CA CPPA ADMT), and
+      algorithmic management of workers (NLRB and state labor
+      enforcement). I file amicus briefs in copyright + scraping cases,
+      file comments on agency RFIs, and watch state legislatures for
+      bills that would expand surveillance or weaken due-process
+      protections. Bring me actions that affect users' privacy,
+      expression, and procedural rights against algorithmic systems.
+    structured_overrides:
+      jurisdictions: [US-Federal, US-CA, US-NY]
+      recency_days: 60
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_eu_policy_lead
+  profile:
+    nl: |
+      I'm head of EU AI policy at a multinational tech company,
+      Brussels-based. I own our positions across the AI Act
+      implementation cycle: AI Office secondary acts, Code of Practice
+      for GPAI, the harmonised standards under CEN-CENELEC JTC 21,
+      delegated acts on Annex III high-risk classification, the
+      conformity-assessment infrastructure, and Article 6/Article 50
+      operationalisation. GDPR-AI intersection (EDPB opinions on
+      training data, Schrems-style challenges to model training) is in
+      scope. I track international standards work (OECD AI, ISO/IEC
+      JTC 1 SC 42, the G7 Hiroshima Process, the AI Safety Summit
+      track) and how UK, US, and Asian frameworks may converge or
+      diverge from the AI Act. Brief me on EU implementing acts,
+      Council/Parliament agenda items, and ECJ/national court actions
+      that affect AI deployment in the single market.
+    structured_overrides:
+      jurisdictions: [EU, UK, global]
+      recency_days: 60
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
+
+- id: case_chip_supply_executive
+  profile:
+    nl: |
+      I'm an SVP of government affairs at a top-5 semiconductor
+      company. My priorities: the BIS export controls regime (FDPR,
+      Entity List, AI diffusion framework, country tiers, license
+      processing), CHIPS Act execution (Section 102 awards, Section
+      48D ITC, NSTC research consortium, Section 9902 default
+      protection), the semiconductor supply ecosystem (raw materials,
+      EUV/DUV tools, packaging in Arizona/New Mexico/Malaysia), H-1B
+      and STEM-talent immigration policy, and any congressional or
+      executive action that shifts the policy stack on chips.
+      Internationally: METI, MOTIE, Taiwan MOEA, EU Chips Act, UK
+      Semiconductor Strategy. Brief me on rules, awards, license
+      decisions, and Hill action that move our cost structure, market
+      access, or talent pipeline.
+    structured_overrides:
+      jurisdictions: [US-Federal, JP, EU]
+      recency_days: 30
+      risk_tolerance: actionable_only
+  expected_top_activities: []  # ADEN: fill in
+  expected_topics_surfaced: []  # ADEN: fill in
+  expected_action_themes: []  # ADEN: fill in
