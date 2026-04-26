@@ -71,6 +71,33 @@ _ACTIVITY_TYPES_BY_ENTITY_TYPE: dict[str, list[str]] = {
         "PUBLIC_STATEMENT",
         "OPEN_LETTER",
     ],
+    "company": [
+        "PRESS_RELEASE",
+        "BLOG_POST",
+        "EXEC_PUBLIC_STATEMENT",
+        "INVESTMENT_ANNOUNCEMENT",
+        "AMICUS_BRIEF",
+        "COMMENT_LETTER",
+    ],
+    "legislator": [
+        "PRESS_STATEMENT",
+        "FLOOR_SPEECH",
+        "LETTER_TO_AGENCY",
+    ],
+    "legislative_body": [
+        "HEARING_HELD",
+        "REPORT_RELEASED",
+    ],
+    "judiciary": [
+        "OPINION",
+        "ORDER",
+        "ORAL_ARGUMENT",
+    ],
+    "executive_agency": [
+        "OFFICIAL_STATEMENT",
+        "GUIDANCE",
+        "ENFORCEMENT_ACTION",
+    ],
 }
 
 
