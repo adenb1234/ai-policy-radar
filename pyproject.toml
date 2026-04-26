@@ -1,0 +1,34 @@
+[project]
+name = "ai-policy-radar-backend"
+version = "0.1.0"
+description = "AI Policy Radar — entity inventory + per-user awareness dashboard for AI policy"
+requires-python = ">=3.11"
+dependencies = [
+  "anthropic>=0.40.0",
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "pydantic>=2.8.0",
+  "sqlite-vec>=0.1.6",
+  "pyyaml>=6.0",
+  "python-dotenv>=1.0.0",
+  "httpx>=0.27.0",
+  "tenacity>=9.0.0",
+  "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.24.0",
+  "ruff>=0.6.0",
+]
+embeddings = [
+  "sentence-transformers>=3.0.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
