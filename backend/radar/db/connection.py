@@ -20,7 +20,10 @@ def get_db_path() -> Path:
 def connect(db_path: Path | None = None) -> sqlite3.Connection:
     path = db_path or get_db_path()
     path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(path)
+    # check_same_thread=False so FastAPI's sync-Depends-into-async-route pattern
+    # (threadpool open, event-loop use) doesn't trip ProgrammingError. SQLite is
+    # serialized inside the C lib; per-request connections still avoid contention.
+    conn = sqlite3.connect(path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.enable_load_extension(True)
     sqlite_vec.load(conn)

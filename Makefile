@@ -31,10 +31,10 @@ seed:
 	uv run python -m radar.scripts.seed_entities
 
 ingest:
-	uv run python -m radar.scripts.ingest
+	PYTHONPATH=backend uv run python -m radar.scripts.ingest $(ARGS)
 
 enrich:
-	uv run python -m radar.scripts.enrich_all
+	PYTHONPATH=backend uv run python -m radar.scripts.enrich $(ARGS)
 
 eval:
 	uv run python evals/run.py

@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Policy Radar — frontend
 
-## Getting Started
+Next.js 16 (App Router) + TypeScript + Tailwind v4 + shadcn/ui. Pure UI; all
+data flows through the FastAPI backend.
 
-First, run the development server:
+## Dev workflow
+
+Two shells, from the repo root (`ai-policy-radar/`):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+make dev-backend   # FastAPI on :8000
+make dev-frontend  # Next.js on :3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or directly:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd backend && PYTHONPATH=. uv run uvicorn radar.main:app --port 8000
+cd frontend && pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Configuration
 
-## Learn More
+Copy `.env.local.example` → `.env.local` and adjust if your backend is not on
+`localhost:8000`:
 
-To learn more about Next.js, take a look at the following resources:
+```
+NEXT_PUBLIC_API_BASE=http://localhost:8000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Pages
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `/` — profile list + create CTA
+- `/profile/new` — natural-language profile builder
+- `/dashboard/[profileId]` — ranked awareness items, sidebar facets
+- `/entities` — directory of tracked entities
+- `/entities/[id]` — entity detail (recent activities + topic stats)
+- `/activity/[id]` — full enrichment view + raw payload
 
-## Deploy on Vercel
+## Build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The frontend never sees the Anthropic API key — all LLM calls happen on the
+backend. Do not introduce `sk-ant-*` references into this package.

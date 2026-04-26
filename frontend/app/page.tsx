@@ -1,65 +1,137 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { listProfiles } from "@/lib/api";
+import { formatDateTime } from "@/lib/format";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  let profiles: Awaited<ReturnType<typeof listProfiles>> = [];
+  let error: string | null = null;
+  try {
+    profiles = await listProfiles();
+  } catch (e) {
+    error = e instanceof Error ? e.message : "failed to load profiles";
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="mx-auto w-full max-w-screen-2xl px-6 py-10">
+      <header className="mb-8">
+        <h1 className="font-heading text-2xl font-semibold tracking-tight">
+          AI Policy Radar
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Personalized awareness across the AI-policy ecosystem — built for
+          analysts, on demand.
+        </p>
+      </header>
+
+      {error ? (
+        <Card className="border-destructive/40">
+          <CardHeader>
+            <CardTitle className="text-destructive">
+              Could not reach the backend
+            </CardTitle>
+            <CardDescription>{error}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">
+              Make sure the API is running at{" "}
+              <code className="rounded bg-muted px-1 py-0.5">
+                http://localhost:8000
+              </code>{" "}
+              (try{" "}
+              <code className="rounded bg-muted px-1 py-0.5">
+                make dev-backend
+              </code>
+              ).
+            </p>
+          </CardContent>
+        </Card>
+      ) : profiles.length === 0 ? (
+        <Card className="border-dashed">
+          <CardHeader>
+            <CardTitle>No profiles yet</CardTitle>
+            <CardDescription>
+              Profiles describe what an analyst cares about. The dashboard is
+              built around one.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link
+              href="/profile/new"
+              className="inline-flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              Create your first profile →
+            </Link>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+          <section>
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Existing profiles ({profiles.length})
+            </h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {profiles.map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/dashboard/${p.id}`}
+                  className="group block"
+                >
+                  <Card className="transition-shadow group-hover:shadow-md group-hover:ring-foreground/20">
+                    <CardHeader>
+                      <CardTitle className="truncate">{p.name}</CardTitle>
+                      <CardDescription className="text-xs">
+                        Created {formatDateTime(p.created_at)}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-xs text-muted-foreground">
+                      <span className="text-primary group-hover:underline">
+                        Open dashboard →
+                      </span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <aside>
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              New profile
+            </h2>
+            <Link href="/profile/new" className="block group">
+              <Card className="border-primary/40 bg-primary/5 transition-colors group-hover:bg-primary/10">
+                <CardHeader>
+                  <CardTitle>Create a profile</CardTitle>
+                  <CardDescription>
+                    Describe an organization and what they monitor. The radar
+                    builds the dashboard around them.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <span className="text-sm font-medium text-primary group-hover:underline">
+                    Start →
+                  </span>
+                </CardContent>
+              </Card>
+            </Link>
+          </aside>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      )}
+
+      <footer className="mt-10 border-t pt-4 text-xs text-muted-foreground">
+        <Link href="/entities" className="hover:text-foreground">
+          Entity directory →
+        </Link>
+      </footer>
     </div>
   );
 }

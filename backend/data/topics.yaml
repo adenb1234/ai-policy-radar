@@ -1,0 +1,569 @@
+# AI Policy Radar — Controlled Topic Vocabulary
+# Drives enrichment tagging (LLM matches raw text → topic id via synonyms)
+# and dashboard filtering. Per BUILD_PLAN.md §6.4 and §14.
+#
+# Schema:
+#   id: snake_case slug (primary key)
+#   name: human-readable label
+#   parent_id: optional id of parent topic (for hierarchy / drill-up); null otherwise
+#   synonyms: 3-8 phrasings actually used in primary sources (bills, agency
+#             rules, press releases, opinions). Used by enrichment LLM to tag.
+
+# ============================================================================
+# COMPUTE & CHIPS
+# ============================================================================
+
+- id: export_controls
+  name: AI export controls
+  parent_id: null
+  synonyms:
+    - "export controls"
+    - "BIS controls"
+    - "advanced computing rule"
+    - "AI diffusion rule"
+    - "country group"
+    - "deemed export"
+    - "Entity List"
+    - "Foreign Direct Product Rule"
+
+- id: chip_controls
+  name: Advanced chip controls
+  parent_id: export_controls
+  synonyms:
+    - "advanced computing chips"
+    - "advanced semiconductor controls"
+    - "GPU export restrictions"
+    - "H100 export"
+    - "H20 license"
+    - "datacenter GPU controls"
+    - "chip smuggling"
+
+- id: compute_thresholds
+  name: Compute thresholds and reporting
+  parent_id: null
+  synonyms:
+    - "compute threshold"
+    - "10^26 operations"
+    - "training compute reporting"
+    - "dual-use foundation model"
+    - "covered model"
+    - "large-scale training run"
+    - "1026 FLOP"
+
+- id: semiconductor_supply
+  name: Semiconductor supply chain
+  parent_id: null
+  synonyms:
+    - "semiconductor supply chain"
+    - "TSMC"
+    - "advanced packaging"
+    - "HBM memory"
+    - "wafer fab equipment"
+    - "lithography"
+    - "ASML"
+    - "foundry capacity"
+
+- id: fab_subsidies
+  name: CHIPS Act and fab subsidies
+  parent_id: semiconductor_supply
+  synonyms:
+    - "CHIPS Act"
+    - "CHIPS and Science"
+    - "fab subsidies"
+    - "Section 9902"
+    - "advanced manufacturing investment credit"
+    - "Commerce Department semiconductor award"
+    - "Intel grant"
+
+# ============================================================================
+# IP & TRAINING DATA
+# ============================================================================
+
+- id: copyright_training_data
+  name: Copyright and training data
+  parent_id: null
+  synonyms:
+    - "training data copyright"
+    - "copyrighted works"
+    - "scraping copyrighted material"
+    - "NYT v. OpenAI"
+    - "infringement by training"
+    - "copyright in AI training"
+    - "Authors Guild"
+    - "Bartz v. Anthropic"
+
+- id: fair_use_ai
+  name: Fair use and AI training
+  parent_id: copyright_training_data
+  synonyms:
+    - "fair use defense"
+    - "transformative use"
+    - "Section 107"
+    - "non-expressive use"
+    - "intermediate copying"
+
+- id: ip_authorship
+  name: AI authorship and inventorship
+  parent_id: null
+  synonyms:
+    - "AI authorship"
+    - "AI inventorship"
+    - "Thaler v. Perlmutter"
+    - "human authorship requirement"
+    - "USPTO inventorship guidance"
+    - "machine-generated work"
+
+# ============================================================================
+# OPEN SOURCE & MODEL RELEASE
+# ============================================================================
+
+- id: open_source_models
+  name: Open-source AI models
+  parent_id: null
+  synonyms:
+    - "open-source AI"
+    - "open foundation model"
+    - "Llama"
+    - "open model"
+    - "NTIA open model report"
+    - "open ecosystem"
+
+- id: open_weights
+  name: Open-weight model release
+  parent_id: open_source_models
+  synonyms:
+    - "open weights"
+    - "open-weight model"
+    - "weights release"
+    - "publicly available model weights"
+    - "dual-use foundation model with widely available weights"
+
+- id: model_release_policy
+  name: Model release and deployment policy
+  parent_id: null
+  synonyms:
+    - "responsible release"
+    - "staged deployment"
+    - "model release policy"
+    - "pre-deployment testing"
+    - "deployment safeguards"
+    - "release decision"
+
+# ============================================================================
+# SAFETY & EVALUATIONS
+# ============================================================================
+
+- id: safety_evals
+  name: Safety evaluations and testing
+  parent_id: null
+  synonyms:
+    - "safety evaluations"
+    - "safety testing"
+    - "AISI evals"
+    - "pre-deployment evaluation"
+    - "model evaluation"
+    - "capability evaluation"
+    - "third-party evals"
+
+- id: dangerous_capabilities
+  name: Dangerous capability thresholds
+  parent_id: safety_evals
+  synonyms:
+    - "dangerous capabilities"
+    - "catastrophic risk"
+    - "frontier risk"
+    - "responsible scaling policy"
+    - "capability threshold"
+    - "uplift evaluation"
+
+- id: red_teaming
+  name: Red-teaming requirements
+  parent_id: safety_evals
+  synonyms:
+    - "red team"
+    - "red-teaming"
+    - "adversarial testing"
+    - "external red team"
+    - "structured red-teaming"
+
+- id: biosafety_csam_misuse
+  name: Bio, CSAM, and high-harm misuse
+  parent_id: null
+  synonyms:
+    - "biosecurity risk"
+    - "biological weapons uplift"
+    - "CBRN risk"
+    - "CSAM generation"
+    - "child sexual abuse material"
+    - "nonconsensual intimate imagery"
+    - "bioweapon synthesis"
+
+# ============================================================================
+# FEDERALISM
+# ============================================================================
+
+- id: preemption_state_federal
+  name: Federal preemption of state AI law
+  parent_id: null
+  synonyms:
+    - "federal preemption"
+    - "preempt state AI laws"
+    - "moratorium on state AI regulation"
+    - "patchwork of state laws"
+    - "uniform federal standard"
+
+- id: state_ai_legislation
+  name: State AI legislation
+  parent_id: null
+  synonyms:
+    - "state AI bill"
+    - "SB 1047"
+    - "Colorado AI Act"
+    - "AB 2013"
+    - "state legislature AI"
+    - "frontier AI safety act"
+    - "state-level AI regulation"
+
+# ============================================================================
+# ANTITRUST
+# ============================================================================
+
+- id: antitrust_concentration
+  name: AI market concentration and antitrust
+  parent_id: null
+  synonyms:
+    - "AI market concentration"
+    - "competition in AI"
+    - "FTC AI inquiry"
+    - "6(b) study"
+    - "vertical integration cloud AI"
+    - "monopolization claim"
+    - "cloud credits"
+
+- id: m_and_a_review
+  name: M&A and partnership review
+  parent_id: antitrust_concentration
+  synonyms:
+    - "merger review"
+    - "HSR filing"
+    - "AI partnership investigation"
+    - "Microsoft OpenAI partnership"
+    - "acqui-hire"
+    - "interlocking directorates"
+
+# ============================================================================
+# TALENT
+# ============================================================================
+
+- id: immigration_talent
+  name: AI talent immigration
+  parent_id: null
+  synonyms:
+    - "AI talent"
+    - "high-skilled immigration"
+    - "O-1 visa"
+    - "talent flight"
+    - "STEM immigration"
+    - "national interest waiver"
+
+- id: h1b_ai_talent
+  name: H-1B and AI workforce
+  parent_id: immigration_talent
+  synonyms:
+    - "H-1B"
+    - "H1B cap"
+    - "specialty occupation"
+    - "H-1B reform"
+    - "wage-based selection"
+
+# ============================================================================
+# ENERGY & SITING
+# ============================================================================
+
+- id: energy_grid_capacity
+  name: Grid capacity for AI
+  parent_id: null
+  synonyms:
+    - "grid capacity"
+    - "load growth"
+    - "datacenter electricity demand"
+    - "PJM capacity auction"
+    - "interconnection queue"
+    - "AI power demand"
+
+- id: datacenter_siting
+  name: Datacenter siting
+  parent_id: null
+  synonyms:
+    - "datacenter siting"
+    - "hyperscaler siting"
+    - "data center permitting"
+    - "data center moratorium"
+    - "cooling water"
+    - "datacenter zoning"
+
+- id: transmission_permitting
+  name: Transmission and permitting
+  parent_id: null
+  synonyms:
+    - "transmission permitting"
+    - "FERC Order 1920"
+    - "interregional transmission"
+    - "transmission siting"
+    - "right-of-way"
+
+- id: nepa_reform
+  name: NEPA reform and energy permitting
+  parent_id: transmission_permitting
+  synonyms:
+    - "NEPA"
+    - "National Environmental Policy Act"
+    - "permitting reform"
+    - "categorical exclusion"
+    - "environmental review"
+    - "Fiscal Responsibility Act permitting"
+
+# ============================================================================
+# PROCUREMENT & GOVERNMENT USE
+# ============================================================================
+
+- id: procurement_federal_ai
+  name: Federal AI procurement
+  parent_id: null
+  synonyms:
+    - "federal AI procurement"
+    - "GSA AI"
+    - "OMB M-24-10"
+    - "OMB M-24-18"
+    - "AI acquisition"
+    - "FedRAMP AI"
+    - "agency AI contract"
+
+- id: agency_use_of_ai
+  name: Agency use of AI
+  parent_id: null
+  synonyms:
+    - "agency use of AI"
+    - "rights-impacting AI"
+    - "safety-impacting AI"
+    - "AI use case inventory"
+    - "Chief AI Officer"
+    - "agency AI policy"
+
+# ============================================================================
+# CONTENT & PROVENANCE
+# ============================================================================
+
+- id: content_provenance
+  name: Content provenance and watermarking
+  parent_id: null
+  synonyms:
+    - "content provenance"
+    - "C2PA"
+    - "content credentials"
+    - "watermarking"
+    - "synthetic content disclosure"
+    - "AI-generated content labeling"
+
+- id: deepfakes
+  name: Deepfakes and synthetic media
+  parent_id: null
+  synonyms:
+    - "deepfake"
+    - "deceptive AI content"
+    - "election deepfake"
+    - "DEFIANCE Act"
+    - "non-consensual deepfake"
+    - "AI-generated robocall"
+
+# ============================================================================
+# PRIVACY
+# ============================================================================
+
+- id: privacy_training_data
+  name: Privacy and training data
+  parent_id: null
+  synonyms:
+    - "training data privacy"
+    - "personal information in training"
+    - "data minimization"
+    - "scraped personal data"
+    - "FTC Section 5 AI"
+    - "biometric data training"
+
+- id: gdpr_ai
+  name: GDPR and AI
+  parent_id: null
+  synonyms:
+    - "GDPR"
+    - "lawful basis for AI training"
+    - "Article 22"
+    - "EDPB opinion"
+    - "data protection authority AI"
+    - "automated decision-making"
+
+# ============================================================================
+# SECTORAL VERTICALS
+# ============================================================================
+
+- id: sectoral_finance
+  name: AI in financial services
+  parent_id: null
+  synonyms:
+    - "AI in banking"
+    - "model risk management"
+    - "SR 11-7"
+    - "algorithmic trading"
+    - "robo-advisor"
+    - "credit underwriting AI"
+    - "Treasury AI report"
+
+- id: sectoral_healthcare
+  name: AI in healthcare
+  parent_id: null
+  synonyms:
+    - "FDA AI/ML"
+    - "clinical decision support"
+    - "predetermined change control plan"
+    - "Software as a Medical Device"
+    - "HTI-1"
+    - "clinical AI"
+    - "radiology AI"
+
+- id: sectoral_defense
+  name: AI in defense and national security
+  parent_id: null
+  synonyms:
+    - "DoD AI"
+    - "CDAO"
+    - "Replicator"
+    - "lethal autonomous weapons"
+    - "responsible AI in defense"
+    - "Project Maven"
+    - "JADC2"
+
+- id: sectoral_education
+  name: AI in education
+  parent_id: null
+  synonyms:
+    - "AI in education"
+    - "Department of Education AI"
+    - "academic integrity AI"
+    - "edtech AI"
+    - "FERPA AI"
+    - "student data AI"
+
+# ============================================================================
+# LIABILITY
+# ============================================================================
+
+- id: liability_tort_ai
+  name: AI tort liability
+  parent_id: null
+  synonyms:
+    - "AI liability"
+    - "tort liability for AI"
+    - "Section 230 AI"
+    - "Anderson v. TikTok"
+    - "products liability AI"
+    - "Moffatt v. Air Canada"
+
+- id: product_safety
+  name: AI product safety
+  parent_id: null
+  synonyms:
+    - "AI product safety"
+    - "CPSC AI"
+    - "defective AI product"
+    - "duty to warn AI"
+    - "design defect"
+
+# ============================================================================
+# TRANSPARENCY
+# ============================================================================
+
+- id: transparency_reporting
+  name: Transparency and disclosure reporting
+  parent_id: null
+  synonyms:
+    - "transparency report"
+    - "model card"
+    - "system card"
+    - "training data disclosure"
+    - "AB 2013 disclosure"
+    - "covered AI disclosure"
+
+- id: audit_requirements
+  name: Third-party AI audits
+  parent_id: null
+  synonyms:
+    - "third-party audit"
+    - "algorithmic audit"
+    - "Local Law 144"
+    - "AEDT audit"
+    - "independent assessment"
+    - "bias audit"
+
+# ============================================================================
+# INTERNATIONAL
+# ============================================================================
+
+- id: international_standards
+  name: International AI standards and governance
+  parent_id: null
+  synonyms:
+    - "international AI standards"
+    - "G7 Hiroshima Process"
+    - "OECD AI Principles"
+    - "AI Seoul Summit"
+    - "Bletchley Declaration"
+    - "Council of Europe AI Convention"
+
+- id: eu_ai_act
+  name: EU AI Act
+  parent_id: international_standards
+  synonyms:
+    - "EU AI Act"
+    - "Regulation 2024/1689"
+    - "general-purpose AI model"
+    - "GPAI obligations"
+    - "AI Office"
+    - "high-risk AI system"
+    - "Code of Practice GPAI"
+
+- id: china_ai_governance
+  name: China AI governance
+  parent_id: international_standards
+  synonyms:
+    - "CAC algorithm registry"
+    - "Cyberspace Administration of China"
+    - "Interim Measures for Generative AI"
+    - "MIIT AI"
+    - "China AI law"
+    - "deep synthesis regulation"
+
+# ============================================================================
+# LABOR
+# ============================================================================
+
+- id: workforce_displacement
+  name: AI workforce displacement
+  parent_id: null
+  synonyms:
+    - "AI job displacement"
+    - "automation and jobs"
+    - "labor market disruption"
+    - "AI-driven layoffs"
+    - "workforce transition"
+    - "reskilling"
+
+- id: labor_ai
+  name: AI in the workplace and worker rights
+  parent_id: null
+  synonyms:
+    - "workplace surveillance"
+    - "algorithmic management"
+    - "NLRB AI guidance"
+    - "EEOC AI guidance"
+    - "worker monitoring"
+    - "AI in hiring"
