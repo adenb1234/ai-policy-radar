@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { listProfiles } from "@/lib/api";
+import { DEMO_MODE, listProfiles } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +22,24 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-6 py-10">
+      {DEMO_MODE ? (
+        <div className="mb-6 rounded-lg border border-amber-300/60 bg-amber-50 px-4 py-3 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-200">
+          <strong className="font-semibold">Live demo — read-only.</strong>{" "}
+          You are viewing pre-computed dashboards for the four built-in
+          analyst profiles. Profile creation and live awareness refresh are
+          disabled in this mode. Run the FastAPI backend locally (see the{" "}
+          <a
+            href="https://github.com/adenb1234/ai-policy-radar"
+            className="underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            README
+          </a>
+          ) for the full experience.
+        </div>
+      ) : null}
+
       <header className="mb-8">
         <h1 className="font-heading text-2xl font-semibold tracking-tight">
           AI Policy Radar

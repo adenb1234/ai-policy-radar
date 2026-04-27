@@ -10,6 +10,55 @@ export const API_BASE: string =
   (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_BASE) ||
   "http://localhost:8000";
 
+/**
+ * DEMO_MODE: when set, the API client returns pre-computed JSON snapshots
+ * shipped under /public/snapshots instead of hitting the FastAPI backend.
+ * This lets us deploy the read-only analyst tool to a static host (e.g.
+ * GitHub Pages, Vercel) without standing up the backend service.
+ *
+ * Snapshots cover the four demo profiles (Frontier Lab, State AG,
+ * Healthcare AI Startup, Datacenter Investor) plus the entities and
+ * activities they reference. Profile creation and live refresh are
+ * disabled in this mode — callers should check `DEMO_MODE` and surface
+ * a banner.
+ */
+export const DEMO_MODE: boolean =
+  typeof process !== "undefined" &&
+  process.env.NEXT_PUBLIC_DEMO_MODE === "1";
+
+/**
+ * Snapshot loader for DEMO_MODE. Reads pre-computed JSON files from
+ * public/snapshots at build/request time. Uses Node's fs on the server
+ * (which is where all our server components run) to avoid having to
+ * stand up a fetch loop against ourselves.
+ */
+async function loadSnapshot<T>(relPath: string): Promise<T> {
+  const isServer = typeof window === "undefined";
+  if (isServer) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = await import("node:fs/promises");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const path = await import("node:path");
+    const filePath = path.join(
+      process.cwd(),
+      "public",
+      "snapshots",
+      relPath.replace(/^\//, ""),
+    );
+    try {
+      const buf = await fs.readFile(filePath, "utf-8");
+      return JSON.parse(buf) as T;
+    } catch (e) {
+      throw new ApiError(404, `snapshot not found: ${filePath}`);
+    }
+  }
+  // Client-side fallback (rare — server components dominate).
+  const url = `/snapshots/${relPath.replace(/^\//, "")}`;
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new ApiError(res.status, `snapshot not found: ${url}`);
+  return (await res.json()) as T;
+}
+
 // ---------- Types ----------
 
 export type EntitySummary = {
@@ -187,10 +236,34 @@ export async function listEntities(opts?: {
   jurisdiction?: string[];
   q?: string;
 }): Promise<EntitySummary[]> {
+  if (DEMO_MODE) {
+    const all = await loadSnapshot<EntitySummary[]>("entities.json");
+    let out = all;
+    if (opts?.entity_type?.length) {
+      const set = new Set(opts.entity_type);
+      out = out.filter((e) => set.has(e.entity_type));
+    }
+    if (opts?.jurisdiction?.length) {
+      const set = new Set(opts.jurisdiction);
+      out = out.filter((e) => e.jurisdiction && set.has(e.jurisdiction));
+    }
+    if (opts?.q) {
+      const q = opts.q.toLowerCase();
+      out = out.filter(
+        (e) =>
+          e.name.toLowerCase().includes(q) ||
+          e.aliases.some((a) => a.toLowerCase().includes(q)),
+      );
+    }
+    return out;
+  }
   return apiFetch<EntitySummary[]>("/entities", { query: opts });
 }
 
 export async function getEntity(id: string): Promise<EntityDetail> {
+  if (DEMO_MODE) {
+    return loadSnapshot<EntityDetail>(`entities/${id}.json`);
+  }
   return apiFetch<EntityDetail>(`/entities/${encodeURIComponent(id)}`);
 }
 
@@ -202,22 +275,36 @@ export async function listActivities(opts?: {
   since?: string;
   limit?: number;
 }): Promise<ActivityWithEnrichment[]> {
+  if (DEMO_MODE) {
+    // Best-effort: not snapshot-indexed; return empty list to avoid
+    // showing stale or partial data on activity-list pages.
+    return [];
+  }
   return apiFetch<ActivityWithEnrichment[]>("/activities", { query: opts });
 }
 
 export async function getActivity(
   id: string,
 ): Promise<ActivityWithEnrichment> {
+  if (DEMO_MODE) {
+    return loadSnapshot<ActivityWithEnrichment>(`activities/${id}.json`);
+  }
   return apiFetch<ActivityWithEnrichment>(
     `/activities/${encodeURIComponent(id)}`,
   );
 }
 
 export async function listProfiles(): Promise<ProfileSummary[]> {
+  if (DEMO_MODE) {
+    return loadSnapshot<ProfileSummary[]>("profiles.json");
+  }
   return apiFetch<ProfileSummary[]>("/profiles");
 }
 
 export async function getProfile(id: string): Promise<Profile> {
+  if (DEMO_MODE) {
+    return loadSnapshot<Profile>(`profile_${id}.json`);
+  }
   return apiFetch<Profile>(`/profiles/${encodeURIComponent(id)}`);
 }
 
@@ -226,6 +313,12 @@ export async function createProfile(body: {
   nl_description: string;
   structured_overrides?: Record<string, unknown>;
 }): Promise<Profile> {
+  if (DEMO_MODE) {
+    throw new ApiError(
+      503,
+      "Profile creation is disabled in the live demo. Run the backend locally to create custom profiles.",
+    );
+  }
   return apiFetch<Profile>("/profiles", {
     method: "POST",
     body: JSON.stringify(body),
@@ -236,6 +329,9 @@ export async function getDashboard(
   profile_id: string,
   opts?: { since?: string; top_k?: number },
 ): Promise<Dashboard> {
+  if (DEMO_MODE) {
+    return loadSnapshot<Dashboard>(`${profile_id}.json`);
+  }
   return apiFetch<Dashboard>(
     `/dashboard/${encodeURIComponent(profile_id)}`,
     { query: opts },
@@ -246,6 +342,10 @@ export async function refreshDashboard(
   profile_id: string,
   opts?: { since?: string; top_k?: number },
 ): Promise<Dashboard> {
+  if (DEMO_MODE) {
+    // Refresh in demo mode just re-reads the same snapshot.
+    return loadSnapshot<Dashboard>(`${profile_id}.json`);
+  }
   return apiFetch<Dashboard>(
     `/awareness/refresh/${encodeURIComponent(profile_id)}`,
     { method: "POST", query: opts },
