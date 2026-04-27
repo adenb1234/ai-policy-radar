@@ -23,20 +23,23 @@ export default async function HomePage() {
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-6 py-10">
       {DEMO_MODE ? (
-        <div className="mb-6 rounded-lg border border-amber-300/60 bg-amber-50 px-4 py-3 text-xs text-amber-900 dark:border-amber-500/40 dark:bg-amber-950/40 dark:text-amber-200">
-          <strong className="font-semibold">Live demo — read-only.</strong>{" "}
-          You are viewing pre-computed dashboards for the four built-in
-          analyst profiles. Profile creation and live awareness refresh are
-          disabled in this mode. Run the FastAPI backend locally (see the{" "}
-          <a
-            href="https://github.com/adenb1234/ai-policy-radar"
-            className="underline"
-            target="_blank"
-            rel="noreferrer"
-          >
-            README
-          </a>
-          ) for the full experience.
+        <div className="mb-6 flex items-center gap-2 rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+          <span className="rounded-sm bg-amber-200/70 px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wide text-amber-950 dark:bg-amber-500/30 dark:text-amber-200">
+            Demo
+          </span>
+          <span className="flex-1">
+            Snapshot from Apr 2026 — four analyst personas with pre-computed
+            awareness dashboards. The full system runs locally with live
+            ingestion and Claude-powered refresh.{" "}
+            <a
+              href="https://github.com/adenb1234/ai-policy-radar"
+              className="underline underline-offset-2 hover:text-foreground"
+              target="_blank"
+              rel="noreferrer"
+            >
+              README →
+            </a>
+          </span>
         </div>
       ) : null}
 
@@ -123,24 +126,54 @@ export default async function HomePage() {
 
           <aside>
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              New profile
+              {DEMO_MODE ? "How it works" : "New profile"}
             </h2>
-            <Link href="/profile/new" className="block group">
-              <Card className="border-primary/40 bg-primary/5 transition-colors group-hover:bg-primary/10">
+            {DEMO_MODE ? (
+              <Card className="border-border/60 bg-muted/30">
                 <CardHeader>
-                  <CardTitle>Create a profile</CardTitle>
+                  <CardTitle className="text-base">
+                    Describe → dashboard
+                  </CardTitle>
                   <CardDescription>
-                    Describe an organization and what they monitor. The radar
-                    builds the dashboard around them.
+                    In the live system, an analyst writes a paragraph about
+                    their organization. Claude extracts a structured profile
+                    (topics, watch-entities, jurisdictions), then ranks recent
+                    AI-policy activity against it.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <span className="text-sm font-medium text-primary group-hover:underline">
-                    Start →
-                  </span>
+                <CardContent className="space-y-2 text-xs text-muted-foreground">
+                  <p>
+                    The four personas on the left were built this way. Open
+                    any of them to see the output.
+                  </p>
+                  <a
+                    href="https://github.com/adenb1234/ai-policy-radar"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-block text-primary hover:underline"
+                  >
+                    Run locally →
+                  </a>
                 </CardContent>
               </Card>
-            </Link>
+            ) : (
+              <Link href="/profile/new" className="block group">
+                <Card className="border-primary/40 bg-primary/5 transition-colors group-hover:bg-primary/10">
+                  <CardHeader>
+                    <CardTitle>Create a profile</CardTitle>
+                    <CardDescription>
+                      Describe an organization and what they monitor. The
+                      radar builds the dashboard around them.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <span className="text-sm font-medium text-primary group-hover:underline">
+                      Start →
+                    </span>
+                  </CardContent>
+                </Card>
+              </Link>
+            )}
           </aside>
         </div>
       )}
