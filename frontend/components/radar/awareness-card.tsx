@@ -13,7 +13,8 @@ export function AwarenessCard({ item }: Props) {
   const stance = enrichment?.stance ?? null;
   const stanceQuote = enrichment?.stance_quote ?? null;
   const topics = enrichment?.topics ?? [];
-  const actions = (awareness.recommended_actions ?? []).slice(0, 3);
+  const allActions = awareness.recommended_actions ?? [];
+  const actions = allActions.slice(0, 3);
   const citations = awareness.citations ?? [];
 
   return (
@@ -103,7 +104,7 @@ export function AwarenessCard({ item }: Props) {
               <span aria-hidden>→</span>
               <span>Recommended actions</span>
               <span className="font-mono text-[10px] font-normal opacity-70">
-                ({actions.length})
+                ({allActions.length})
               </span>
             </div>
             <ul className="ml-4 list-disc space-y-1 text-sm">
