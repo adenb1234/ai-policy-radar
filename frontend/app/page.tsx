@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DEMO_MODE, listProfiles } from "@/lib/api";
+import { listProfiles } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -22,7 +22,6 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-6 py-10">
-
       <header className="mb-8">
         <h1 className="font-heading text-2xl font-semibold tracking-tight">
           AI Policy Radar
@@ -106,54 +105,24 @@ export default async function HomePage() {
 
           <aside>
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {DEMO_MODE ? "How it works" : "New profile"}
+              New profile
             </h2>
-            {DEMO_MODE ? (
-              <Card className="border-border/60 bg-muted/30">
+            <Link href="/profile/new" className="block group">
+              <Card className="border-primary/40 bg-primary/5 transition-colors group-hover:bg-primary/10">
                 <CardHeader>
-                  <CardTitle className="text-base">
-                    Describe → dashboard
-                  </CardTitle>
+                  <CardTitle>Create a profile</CardTitle>
                   <CardDescription>
-                    In the live system, an analyst writes a paragraph about
-                    their organization. Claude extracts a structured profile
-                    (topics, watch-entities, jurisdictions), then ranks recent
-                    AI-policy activity against it.
+                    Describe an organization and what they monitor. The radar
+                    builds the dashboard around them.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2 text-xs text-muted-foreground">
-                  <p>
-                    The four personas on the left were built this way. Open
-                    any of them to see the output.
-                  </p>
-                  <a
-                    href="https://github.com/adenb1234/ai-policy-radar"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block text-primary hover:underline"
-                  >
-                    Run locally →
-                  </a>
+                <CardContent>
+                  <span className="text-sm font-medium text-primary group-hover:underline">
+                    Start →
+                  </span>
                 </CardContent>
               </Card>
-            ) : (
-              <Link href="/profile/new" className="block group">
-                <Card className="border-primary/40 bg-primary/5 transition-colors group-hover:bg-primary/10">
-                  <CardHeader>
-                    <CardTitle>Create a profile</CardTitle>
-                    <CardDescription>
-                      Describe an organization and what they monitor. The
-                      radar builds the dashboard around them.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <span className="text-sm font-medium text-primary group-hover:underline">
-                      Start →
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            )}
+            </Link>
           </aside>
         </div>
       )}
