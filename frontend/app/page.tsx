@@ -22,26 +22,6 @@ export default async function HomePage() {
 
   return (
     <div className="mx-auto w-full max-w-screen-2xl px-6 py-10">
-      {DEMO_MODE ? (
-        <div className="mb-6 flex items-center gap-2 rounded-md border border-border/60 bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-          <span className="rounded-sm bg-amber-200/70 px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wide text-amber-950 dark:bg-amber-500/30 dark:text-amber-200">
-            Demo
-          </span>
-          <span className="flex-1">
-            Snapshot from Apr 2026 — four analyst personas with pre-computed
-            awareness dashboards. The full system runs locally with live
-            ingestion and Claude-powered refresh.{" "}
-            <a
-              href="https://github.com/adenb1234/ai-policy-radar"
-              className="underline underline-offset-2 hover:text-foreground"
-              target="_blank"
-              rel="noreferrer"
-            >
-              README →
-            </a>
-          </span>
-        </div>
-      ) : null}
 
       <header className="mb-8">
         <h1 className="font-heading text-2xl font-semibold tracking-tight">
