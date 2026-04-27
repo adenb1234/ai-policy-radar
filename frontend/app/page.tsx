@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { listProfiles } from "@/lib/api";
+import { DEMO_MODE, listProfiles } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -73,7 +73,13 @@ export default async function HomePage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]">
+        <div
+          className={
+            DEMO_MODE
+              ? "grid grid-cols-1 gap-6"
+              : "grid grid-cols-1 gap-6 lg:grid-cols-[1fr_320px]"
+          }
+        >
           <section>
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Existing profiles ({profiles.length})
@@ -103,6 +109,7 @@ export default async function HomePage() {
             </div>
           </section>
 
+          {DEMO_MODE ? null : (
           <aside>
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               New profile
@@ -124,6 +131,7 @@ export default async function HomePage() {
               </Card>
             </Link>
           </aside>
+          )}
         </div>
       )}
 
