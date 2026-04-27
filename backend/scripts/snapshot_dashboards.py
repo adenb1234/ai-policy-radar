@@ -18,6 +18,13 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
+from tenacity import (
+    retry,
+    retry_if_exception_type,
+    stop_after_attempt,
+    wait_exponential,
+)
+
 API = "http://127.0.0.1:8000"
 SINCE = "2024-01-01"
 TOP_K = 15
@@ -34,6 +41,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SNAP = REPO_ROOT / "frontend" / "public" / "snapshots"
 
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=0.5, min=0.5, max=4),
+    retry=retry_if_exception_type((urllib.error.URLError, TimeoutError)),
+    reraise=True,
+)
 def fetch(path: str) -> dict | list:
     url = f"{API}{path}"
     with urllib.request.urlopen(url, timeout=300) as r:
@@ -59,7 +72,6 @@ def main() -> int:
     print(f"[snapshot] profiles.json — {len(kept_profiles)} profiles")
 
     seen_activities: set[str] = set()
-    seen_entity_ids: set[str] = set()
 
     # 2. per-profile dashboard + profile metadata
     for p in kept_profiles:
@@ -80,11 +92,6 @@ def main() -> int:
             aid = act.get("id")
             if aid:
                 seen_activities.add(aid)
-            ent = it.get("source_entity")
-            if ent and ent.get("id"):
-                seen_entity_ids.add(ent["id"])
-            if act.get("entity_id"):
-                seen_entity_ids.add(act["entity_id"])
 
         print(f"[snapshot]   {pid} '{p['name']}' — {len(items)} items")
 
