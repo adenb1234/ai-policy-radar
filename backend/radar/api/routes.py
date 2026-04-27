@@ -759,14 +759,29 @@ async def refresh_awareness(
     top_k: int = Query(default=15, ge=1, le=30),
 ) -> DashboardOut:
     engine = _get_awareness_engine(request)
-    # Drop any prior cached items for this profile so the fresh run is the
-    # only set in `awareness_item`.
+    # Drop prior cached items + run the engine in the same transaction so a
+    # mid-flight engine failure rolls back, leaving the prior items intact
+    # rather than wiping the user down to zero.
     try:
         db.execute("DELETE FROM awareness_item WHERE user_id = ?", (profile_id,))
-        db.commit()
     except sqlite3.Error as exc:  # noqa: BLE001
         log.warning("failed to clear awareness_item for %s: %s", profile_id, exc)
-    return await _build_dashboard_response(db, engine, profile_id, since, top_k)
+        db.rollback()
+        return await _build_dashboard_response(db, engine, profile_id, since, top_k)
+
+    try:
+        response = await _build_dashboard_response(
+            db, engine, profile_id, since, top_k
+        )
+    except Exception:
+        # Engine raised — undo the DELETE so the user keeps their prior items.
+        db.rollback()
+        raise
+    # Engine commits its own INSERTs on success; this commit is a no-op if
+    # nothing is pending but ensures the DELETE lands even when the engine
+    # produced zero items.
+    db.commit()
+    return response
 
 
 __all__ = ["router", "get_db"]
