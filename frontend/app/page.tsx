@@ -36,22 +36,29 @@ export default async function HomePage() {
         <Card className="border-destructive/40">
           <CardHeader>
             <CardTitle className="text-destructive">
-              Could not reach the backend
+              {DEMO_MODE ? "Demo data not available" : "Could not reach the backend"}
             </CardTitle>
             <CardDescription>{error}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">
-              Make sure the API is running at{" "}
-              <code className="rounded bg-muted px-1 py-0.5">
-                http://localhost:8000
-              </code>{" "}
-              (try{" "}
-              <code className="rounded bg-muted px-1 py-0.5">
-                make dev-backend
-              </code>
-              ).
-            </p>
+            {DEMO_MODE ? (
+              <p className="text-xs text-muted-foreground">
+                A snapshot file is missing. This is unexpected on the deployed
+                site — please reload.
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                Make sure the API is running at{" "}
+                <code className="rounded bg-muted px-1 py-0.5">
+                  http://localhost:8000
+                </code>{" "}
+                (try{" "}
+                <code className="rounded bg-muted px-1 py-0.5">
+                  make dev-backend
+                </code>
+                ).
+              </p>
+            )}
           </CardContent>
         </Card>
       ) : profiles.length === 0 ? (
