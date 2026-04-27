@@ -1,5 +1,9 @@
 # AI Policy Radar
 
+> **🔗 Live demo:** [**ai-policy-radar.vercel.app**](https://ai-policy-radar.vercel.app/) — read-only static deploy with four pre-built analyst personas. Try the [State AG dashboard](https://ai-policy-radar.vercel.app/dashboard/94cbcfb90d10) first (richest at 14 awareness items); also see [Frontier Lab](https://ai-policy-radar.vercel.app/dashboard/2c4771bfe57e), [Healthcare AI](https://ai-policy-radar.vercel.app/dashboard/3d27db24e009), and [Datacenter Investor](https://ai-policy-radar.vercel.app/dashboard/b80d5d3ddb26).
+>
+> The deploy serves pre-computed snapshots (`NEXT_PUBLIC_DEMO_MODE=1`). The full live system — profile creation, awareness refresh, ingestion — runs locally per the [Live demo flow](#2-live-demo-flow) below.
+
 A working inventory of the entities active in AI policy and regulation — companies, agencies, legislators, courts, civil-society orgs, foreign bodies — together with a per-user "awareness dashboard" that surfaces the developments most relevant to a stated set of equities, with grounded reasoning, source citations, and recommended actions. Built for a working policy/geopolitics analyst (Aden Barton); designed to feel like the analyst tool he would have wanted at Bridgewater or CEA, not a consumer chat surface.
 
 This README is the document a Perplexity reviewer reads first. The full spec, the architecture rationale, the decision log, and the phase plan all live in [`../BUILD_PLAN.md`](../BUILD_PLAN.md) — that file is the durable source of truth and is referenced throughout below.
