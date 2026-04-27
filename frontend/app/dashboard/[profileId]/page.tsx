@@ -16,7 +16,7 @@ export default async function DashboardPage({
 }) {
   const { profileId } = await params;
 
-  const initialDays = 30;
+  const initialDays = 90;
   const since = isoDaysAgo(initialDays);
 
   // Fetch profile + dashboard in parallel.
