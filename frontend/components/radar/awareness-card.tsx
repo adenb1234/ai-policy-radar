@@ -98,11 +98,15 @@ export function AwarenessCard({ item }: Props) {
 
         {/* Recommended actions */}
         {actions.length > 0 ? (
-          <div>
-            <div className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Recommended actions
+          <div className="rounded-md border-l-2 border-primary/60 bg-primary/5 px-3 py-2">
+            <div className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary">
+              <span aria-hidden>→</span>
+              <span>Recommended actions</span>
+              <span className="font-mono text-[10px] font-normal opacity-70">
+                ({actions.length})
+              </span>
             </div>
-            <ul className="ml-4 list-disc space-y-0.5 text-sm">
+            <ul className="ml-4 list-disc space-y-1 text-sm">
               {actions.map((a, i) => (
                 <li key={i} className="leading-snug">
                   {a}
