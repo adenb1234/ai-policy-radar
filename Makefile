@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: help install install-backend install-frontend dev dev-backend dev-frontend seed ingest enrich eval clean
+.PHONY: help install install-backend install-frontend dev dev-backend dev-frontend seed ingest enrich embed eval clean
 
 help:
 	@echo "AI Policy Radar — Makefile targets"
@@ -35,6 +35,9 @@ ingest:
 
 enrich:
 	PYTHONPATH=backend uv run python -m radar.scripts.enrich $(ARGS)
+
+embed:
+	PYTHONPATH=backend uv run python -m radar.scripts.embed_all $(ARGS)
 
 eval:
 	PYTHONPATH=backend uv run python -m evals.run $(ARGS)

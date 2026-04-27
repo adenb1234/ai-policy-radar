@@ -10,7 +10,13 @@ import sqlite_vec
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_DB_PATH = REPO_ROOT / "data" / "radar.db"
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
-EMBEDDING_DIM = int(os.environ.get("RADAR_EMBEDDING_DIM", "384"))
+# Default 256 to match the `minishlab/potion-base-8M` model2vec output
+# (torch-free; the original MiniLM-L6 default would have been 384). Override
+# with `RADAR_EMBEDDING_DIM` if swapping models — the vec0 virtual table is
+# created lazily in `init_schema`, so changing this and re-bootstrapping
+# (`PYTHONPATH=backend uv run python -m radar.db.connection`) on a fresh DB
+# is the supported migration path.
+EMBEDDING_DIM = int(os.environ.get("RADAR_EMBEDDING_DIM", "256"))
 
 
 def get_db_path() -> Path:

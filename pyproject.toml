@@ -1,6 +1,6 @@
 [project]
 name = "ai-policy-radar-backend"
-version = "0.1.0"
+version = "0.2.0"
 description = "AI Policy Radar — entity inventory + per-user awareness dashboard for AI policy"
 requires-python = ">=3.11"
 dependencies = [
@@ -23,7 +23,11 @@ dev = [
   "ruff>=0.6.0",
 ]
 embeddings = [
-  "sentence-transformers>=3.0.0",
+  # `sentence-transformers` pulls torch, which has no Mac-x86_64 wheel for
+  # the active Python build. `model2vec` is a torch-free static-embedding
+  # library (numpy + tokenizers). Default model `minishlab/potion-base-8M`
+  # is 256-dim — see `radar.db.connection.EMBEDDING_DIM` (env-overridable).
+  "model2vec>=0.8.0",
 ]
 
 [tool.uv]
